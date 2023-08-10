@@ -12,15 +12,23 @@
 # unINS
 Unleash Python's power with this uninstaller script. Bid farewell to unwanted software as it explores your system, leaving no trace. Deep searches, registry detection, and 'wmic' magic remove programs.
 
-==================================================
-unINS - README
-==================================================
+WARNING: This script can potentially harm your system if used improperly. Only use it if you fully understand its functionality and are aware of the risks.
 
-This Python script allows you to search for installed programs, including their files, directories, and registry keys, and uninstall them from your Windows system.
+The "Uninstall Program Helper" script is a Python program designed to assist users in searching for, creating backups of, and potentially uninstalling software programs from a Windows system. The script provides a user-friendly interface for these tasks, allowing users to specify the program they want to target and offering options to back up relevant files and registry keys before proceeding with the uninstallation.
 
----------------------------------------------------------------------------
-Script Usage
----------------------------------------------------------------------------
+The script works by performing a comprehensive search throughout the system for files, directories, and registry keys associated with the specified program name. Once the search is complete, the script displays the search results, showing the paths of files, directories, and registry keys that match the program name.
+
+Users are given the option to perform the following actions:
+
+Backup Files and Registry Keys: Users can choose to create backups of the program's files and registry keys before proceeding with uninstallation. This backup can be valuable for restoring the program in case of any issues.
+
+Uninstall the Program: Users can opt to uninstall the specified program. The script uses the Windows Management Instrumentation Command-line (WMIC) to initiate the uninstallation process. The script provides an option for silent uninstallation, which means the uninstallation will proceed without user interaction (use with caution).
+
+WARNING: This script has the potential to impact your system, especially when performing uninstallations or modifying the Windows registry. It's essential to exercise caution and fully understand the consequences of using this script. Incorrect usage or uninstallation of critical software could cause system instability or data loss. Use this script only if you are confident in your understanding of its functionality and potential risks.
+
+Before using this script, make sure you review the search results carefully, understand the implications of uninstalling the specified program, and consider creating backups of important data on your system. Always exercise caution and backup your important data before making any significant changes to your system. If you're unsure about using this script, seek assistance from a knowledgeable professional.
+
+Remember, this script is intended for advanced users who have a good understanding of system operations and the potential consequences of uninstalling software and modifying the Windows registry. It's not suitable for casual users or those who are not familiar with the intricacies of software management on Windows systems.
 
 1. Make sure you have Python installed on your Windows system. If Python is not installed, visit https://www.python.org/downloads/ to download and install it.
 
