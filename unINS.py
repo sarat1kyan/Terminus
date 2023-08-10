@@ -25,7 +25,7 @@ def search_program(program_name):
             subkey_name = winreg.EnumKey(key, i)
             if program_name.lower() in subkey_name.lower():
                 registry_keys.append(os.path.join('Software', subkey_name))
-    except WindowsError:
+    except OSError:
         pass
 
     return files_found, dirs_found, registry_keys
@@ -44,15 +44,18 @@ def backup_registry_keys(keys, backup_file):
     # Export the registry keys to a backup file
     with open(backup_file, 'w') as f:
         for key in keys:
-            f.write(f'reg export "{key}"\n')
+            f.write(f'reg export "{key}" "{backup_file}"\n')
 
 def uninstall_program(program_name, backup=True, silent=False):
     # Check if the program is installed
     installed = False
-    process = subprocess.Popen(['wmic', 'product', 'get', 'name'], stdout=subprocess.PIPE, universal_newlines=True)
-    output, _ = process.communicate()
-    if program_name in output:
-        installed = True
+    try:
+        process = subprocess.Popen(['wmic', 'product', 'get', 'name'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        output, _ = process.communicate()
+        if program_name in output:
+            installed = True
+    except Exception as e:
+        print(f"An error occurred while checking if {program_name} is installed: {e}")
 
     if installed:
         # Create a backup if enabled
@@ -70,62 +73,67 @@ def uninstall_program(program_name, backup=True, silent=False):
         command = ['wmic', 'product', 'where', f'name="{program_name}"', 'call', 'uninstall']
         if silent:
             command.append('/nointeractive')
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        _, error = process.communicate()
-        if error:
-            print(f"Error occurred while uninstalling {program_name}: {error}")
-        else:
-            print(f"{program_name} was successfully uninstalled.")
+        try:
+            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            _, error = process.communicate()
+            if error:
+                print(f"Error occurred while uninstalling {program_name}: {error}")
+            else:
+                print(f"{program_name} was successfully uninstalled.")
+        except Exception as e:
+            print(f"An error occurred while uninstalling {program_name}: {e}")
     else:
         print(f"{program_name} is not installed.")
 
 def main():
-    # Prompt the user to enter the program name
-    program_name = input("Enter the program name to search and uninstall: ")
+    try:
+        # Prompt the user to enter the program name
+        program_name = input("Enter the program name to search and uninstall: ")
 
-    # Search for the program
-    print("Searching for the program...")
-    files_found, dirs_found, registry_keys = search_program(program_name)
+        # Search for the program
+        print("Searching for the program...")
+        files_found, dirs_found, registry_keys = search_program(program_name)
 
-    # Display the search results
-    if files_found or dirs_found or registry_keys:
-        print("Program found.")
-        print("Files found:")
-        for file in files_found:
-             print(file)
-        print("Directories found:")
-        for dir in dirs_found:
-            print(dir)
-        print("Registry keys found:")
-        for key in registry_keys:
-            print(key)
-    else:
-        print("Program not found.")
+        # Display the search results
+        if files_found or dirs_found or registry_keys:
+            print("Program found.")
+            print("Files found:")
+            for file in files_found:
+                print(file)
+            print("Directories found:")
+            for dir in dirs_found:
+                print(dir)
+            print("Registry keys found:")
+            for key in registry_keys:
+                print(key)
 
-    # Prompt the user for further actions
-    if files_found or dirs_found or registry_keys:
-        backup_option = input("Do you want to create a backup of the program files and registry keys? (y/n): ")
-        if backup_option.lower() == 'y':
-            backup_dir = f"{program_name}_backup"
-            backup_files(files_found + dirs_found, backup_dir)
-            backup_file = f"{program_name}_registry_backup.reg"
-            backup_registry_keys(registry_keys, backup_file)
-            print("Backup created.")
+            # Prompt the user for further actions
+            backup_option = input("Do you want to create a backup of the program files and registry keys? (y/n): ")
+            if backup_option.lower() == 'y':
+                backup_dir = f"{program_name}_backup"
+                backup_files(files_found + dirs_found, backup_dir)
+                backup_file = f"{program_name}_registry_backup.reg"
+                backup_registry_keys(registry_keys, backup_file)
+                print("Backup created.")
 
-        uninstall_option = input("Do you want to uninstall the program? (y/n): ")
-        if uninstall_option.lower() == 'y':
-            silent_option = input("Do you want to perform a silent uninstallation? (y/n): ")
-            if silent_option.lower() == 'y':
-                uninstall_program(program_name, backup=False, silent=True)
-            else:
-                uninstall_program(program_name, backup=False)
+            uninstall_option = input("Do you want to uninstall the program? (y/n): ")
+            if uninstall_option.lower() == 'y':
+                silent_option = input("Do you want to perform a silent uninstallation? (y/n): ")
+                if silent_option.lower() == 'y':
+                    uninstall_program(program_name, backup=False, silent=True)
+                else:
+                    uninstall_program(program_name, backup=False)
 
-    # Wait for a few seconds to allow changes to take effect
-    time.sleep(3)
+            # Wait for a few seconds to allow changes to take effect
+            time.sleep(3)
 
-    # Search again to verify if the program is uninstalled
-    print("Searching again to verify uninstallation...")
-    search_program(program_name)
+            # Search again to verify if the program is uninstalled
+            print("Searching again to verify uninstallation...")
+            search_program(program_name)
+        else:
+            print("Program not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()
