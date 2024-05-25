@@ -8,6 +8,9 @@
 # unINS 3.0
 Unleash Python's power with this untaller script. Bid farewell to unwanted software as it explores your system, leaving no trace. Deep searches, registry detection, and 'wmic' magic remove programs.
 
+![diagram-unINS30](https://github.com/sarat1kyan/unINS/assets/91123731/b80db934-d222-4608-84c8-4e60e5a0cc44)
+
+
 # Windows Program uninstaller
 
 A Python script for uninstalling programs from a Windows system with advanced cleanup options.
