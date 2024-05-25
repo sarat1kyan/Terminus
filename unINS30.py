@@ -149,12 +149,10 @@ def advanced_uninstall_program(program_name):
             print("Advanced uninstallation canceled.")
             return
 
-        # Uninstall the program using its uninstall string
         with reg.OpenKey(reg.HKEY_LOCAL_MACHINE, chosen_program[1]) as sub_key:
             uninstall_string = reg.QueryValueEx(sub_key, "UninstallString")[0]
         subprocess.run(uninstall_string, shell=True)
 
-        # Advanced: Delete registry keys, files, services, and tasks
         delete_registry_keys(program_name)
         delete_related_files(program_name)
         delete_services_and_tasks(program_name)
@@ -190,12 +188,25 @@ def delete_registry_keys(program_name):
     delete_keys(reg.HKEY_LOCAL_MACHINE, uninstall_key)
     delete_keys(reg.HKEY_CURRENT_USER, uninstall_key)
     
-    # Additional registry paths to search for remnants
     additional_paths = [
-        r"SOFTWARE",
-        r"SOFTWARE\Wow6432Node",
-        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run",
-        r"SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce"
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+        r"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\Packages",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\PackagesPending",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\ComponentDetect",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products",  
+        r"SOFTWARE\Classes\Installer\Products",  
+        r"SOFTWARE\Classes\Installer\Features",  
+        r"SOFTWARE\Classes\Installer\UpgradeCodes",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\WixBundleInstalled",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{6E4D73D3-FAEB-4D9E-A116-236693F6D8B9}_is1",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Assemblies",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Win32Assemblies",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft SQL Server",  
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Visual Studio",  
     ]
     
     for base_key in additional_paths:
