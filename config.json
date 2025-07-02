@@ -1,0 +1,56 @@
+{
+    "terminus_config": {
+        "version": "1.0.0",
+        "settings": {
+            "dry_run_default": false,
+            "log_level": "INFO",
+            "secure_delete_passes": 3,
+            "create_restore_points": true,
+            "confirm_critical_operations": true,
+            "page_size": 20
+        },
+        "safety": {
+            "protected_software": [
+                "kernel",
+                "systemd",
+                "init",
+                "Windows",
+                "System32",
+                "explorer.exe",
+                "winlogon.exe",
+                "services.exe",
+                "svchost.exe",
+                "csrss.exe"
+            ],
+            "protected_paths": [
+                "C:\\Windows",
+                "C:\\Program Files\\Windows*",
+                "/bin",
+                "/sbin",
+                "/usr/bin",
+                "/usr/sbin",
+                "/System",
+                "/Library/System"
+            ],
+            "require_confirmation": [
+                "antivirus",
+                "firewall",
+                "security",
+                "driver",
+                "system"
+            ]
+        },
+        "ui": {
+            "colors_enabled": true,
+            "show_ascii_logo": true,
+            "animation_speed": 0.1,
+            "date_format": "%Y-%m-%d %H:%M:%S"
+        },
+        "advanced": {
+            "max_process_wait_time": 5,
+            "file_chunk_size": 1048576,
+            "enable_low_level_operations": false,
+            "parallel_operations": false
+        }
+    }
+}
