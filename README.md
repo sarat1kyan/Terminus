@@ -65,6 +65,7 @@ pip install psutil blessings
 ```bash
 git clone https://github.com/sarat1kyan/terminus.git
 cd terminus
+install.py
 python terminus.py
 ```
 
