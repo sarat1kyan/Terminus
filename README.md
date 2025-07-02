@@ -129,6 +129,129 @@ sudo python3 terminus.py
 
 </details>
 
+
+## 🛡️ Safety & Operations Guide
+
+### ⚠️ Known Issues & Solutions
+
+<details>
+<summary><b>macOS Specific Issues</b></summary>
+
+```bash
+# "Operation not permitted" error:
+1. Go to System Preferences → Security & Privacy → Privacy
+2. Select Full Disk Access
+3. Add your Terminal application to the allowed list
+
+# Gatekeeper blocking execution:
+xattr -d com.apple.quarantine terminus.py
+```
+
+</details>
+
+### 🛡️ Universal Precautions
+
+**Before launching any operation:**
+
+#### 1. Create System Backups
+```bash
+# Linux/macOS (rsync):
+sudo rsync -av --progress / /backup/location \
+--exclude={/dev,/proc,/sys,/tmp,/run,/mnt,/media,/lost+found}
+
+# Windows (wbadmin):
+wbadmin start backup -backupTarget:E: -include:C: -allCritical -quiet
+```
+
+#### 2. Document Your System
+```bash
+# Windows software inventory:
+wmic product get name,version > software_list.txt
+
+# Debian/Ubuntu packages:
+dpkg -l > software_list.txt
+
+# macOS applications:
+brew list --versions > brew_list.txt
+ls /Applications > applications_list.txt
+```
+
+#### 3. Virtual Machine Testing
+```diff
++ Mandatory for dangerous operations +
+- Install VirtualBox/VMware
+- Create snapshot before testing
+- Practice removal operations safely
+```
+
+### ☠️ Critical Software Protection
+
+| Platform       | Never Remove These Components              | Consequences               |
+|----------------|-------------------------------------------|----------------------------|
+| **Windows**    | Defender, .NET, DirectX, KB updates       | ⚠️ System instability     |
+| **Linux**      | Kernel, libc, systemd, coreutils          | 💥 Unbootable system      |
+| **macOS**      | System frameworks, kexts, security        | 🚫 Loss of core functions |
+
+### 🆘 Emergency Recovery
+
+<details>
+<summary><b>Windows Recovery</b></summary>
+
+```powershell
+1. Boot from installation media
+2. Select "Repair your computer"
+3. Choose Troubleshoot → Advanced Options
+4. Run: sfc /scannow
+5. Use System Restore if available
+```
+</details>
+
+<details>
+<summary><b>Linux Recovery</b></summary>
+
+```bash
+1. Boot from Live USB
+2. Mount root partition: mount /dev/sda1 /mnt
+3. Chroot: chroot /mnt
+4. Reinstall packages: apt install --reinstall coreutils systemd
+5. Update bootloader: update-grub
+```
+</details>
+
+<details>
+<summary><b>macOS Recovery</b></summary>
+
+```bash
+1. Reboot holding Cmd+R
+2. Open Disk Utility → Repair Disk
+3. Reinstall macOS without losing data
+4. Restore from Time Machine backup
+```
+</details>
+
+### ⚡Optimization Tips:
+```bash
+# Linux/macOS - Lower priority:
+nice -n 15 python3 terminus.py
+
+# Windows - Reduce priority:
+start /belownormal python terminus.py
+
+# All systems - Disable animations:
+python terminus.py --minimal-ui
+```
+
+#### Performance Characteristics:
+| Operation          | Time Range      | CPU Usage | Disk I/O  |
+|--------------------|----------------|-----------|-----------|
+| System Scan        | 2-10 minutes   | Medium    | Low       |
+| Standard Removal   | 1-5 minutes    | Medium    | Medium    |
+| Secure File Wipe   | 5-15+ minutes  | High      | Very High |
+| Registry Cleanup   | 1-10 minutes   | Low       | Medium    |
+
+---
+
+
 ## 🕹️ Usage Demo
 
 ```
