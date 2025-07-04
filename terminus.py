@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """
-Terminus - Advanced System Software Manager (FIXED VERSION)
-With proper navigation, complete software scanning, and aggressive permission handling
+Terminus - The Ultimate System Cleaner
+========================================
+Version 4.0
+Build 475326
+Built with Python 3.10+
+Copyright (c) 2023-2025 Mher Saratikyan
+Licensed under the GNU General Public License v3.0
+A powerful tool for system administrators to manage and remove software
 """
 
 import os
