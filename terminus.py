@@ -62,25 +62,30 @@ else:
 
 # Constants
 APP_NAME = "Terminus"
-VERSION = "1.0.0 FIXED"
+VERSION = "5.0 ULTIMATE"
 LOG_DIR = Path.home() / ".terminus" / "logs"
 CONFIG_DIR = Path.home() / ".terminus"
-SECURE_DELETE_PASSES = 3
+SECURE_DELETE_PASSES = 7  # Enhanced from 3 to 7 passes
 
-# ASCII Art Logo
-LOGO = """
-
-╔═══════════════════════════┤ Version v4.0 ├═════════════════════════════╗
-║                                                                        ║
-║  ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗██╗   ██╗███████╗    ║
-║  ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██║   ██║██╔════╝    ║
-║     ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║██║   ██║███████╗    ║
-║     ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██║   ██║╚════██║    ║
-║     ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║╚██████╔╝███████║    ║
-║     ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝    ║
-║                       Ultimate System Cleaner                          ║
-╚════════════════════════════════════════════════════════════════════════╝
-
+# Enhanced ASCII Art Logo with better styling
+LOGO = f"""
+{Fore.CYAN}{Style.BRIGHT}
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║  {Fore.MAGENTA}████████╗{Fore.CYAN}███████╗{Fore.MAGENTA}██████╗{Fore.CYAN} ███╗   ███╗{Fore.MAGENTA}██╗{Fore.CYAN}███╗   ██╗{Fore.MAGENTA}██╗{Fore.CYAN}   ██╗{Fore.MAGENTA}██╗{Fore.CYAN}   ██╗{Fore.MAGENTA}███████╗{Fore.CYAN}    ║
+║  {Fore.MAGENTA}╚══██╔══╝{Fore.CYAN}██╔════╝{Fore.MAGENTA}██╔══██╗{Fore.CYAN}████╗ ████║{Fore.MAGENTA}██║{Fore.CYAN}████╗  ██║{Fore.MAGENTA}██║{Fore.CYAN}   ██║{Fore.MAGENTA}██║{Fore.CYAN}   ██║{Fore.MAGENTA}██╔════╝{Fore.CYAN}    ║
+║     {Fore.MAGENTA}██║{Fore.CYAN}   █████╗  {Fore.MAGENTA}██████╔╝{Fore.CYAN}██╔████╔██║{Fore.MAGENTA}██║{Fore.CYAN}██╔██╗ ██║{Fore.MAGENTA}██║{Fore.CYAN}   ██║{Fore.MAGENTA}██║{Fore.CYAN}   ██║{Fore.MAGENTA}███████╗{Fore.CYAN}    ║
+║     {Fore.MAGENTA}██║{Fore.CYAN}   ██╔══╝  {Fore.MAGENTA}██╔══██╗{Fore.CYAN}██║╚██╔╝██║{Fore.MAGENTA}██║{Fore.CYAN}██║╚██╗██║{Fore.MAGENTA}██║{Fore.CYAN}   ██║{Fore.MAGENTA}██║{Fore.CYAN}   ██║{Fore.MAGENTA}╚════██║{Fore.CYAN}    ║
+║     {Fore.MAGENTA}██║{Fore.CYAN}   ███████╗{Fore.MAGENTA}██║  ██║{Fore.CYAN}██║ ╚═╝ ██║{Fore.MAGENTA}██║{Fore.CYAN}██║ ╚████║{Fore.MAGENTA}╚██████╔╝{Fore.MAGENTA}╚██████╔╝{Fore.MAGENTA}███████║{Fore.CYAN}    ║
+║     {Fore.MAGENTA}╚═╝{Fore.CYAN}   ╚══════╝{Fore.MAGENTA}╚═╝  ╚═╝{Fore.CYAN}╚═╝     ╚═╝{Fore.MAGENTA}╚═╝{Fore.CYAN}╚═╝  ╚═══╝{Fore.MAGENTA} ╚═════╝ {Fore.MAGENTA} ╚═════╝ {Fore.MAGENTA}╚══════╝{Fore.CYAN}    ║
+║                                                                           ║
+║  {Fore.YELLOW}╔═══════════════════════════════════════════════════════════════════╗{Fore.CYAN}    ║
+║  {Fore.YELLOW}║{Fore.GREEN}  ⚡ ULTIMATE SYSTEM CLEANER - REMOVES EVERYTHING ⚡{Fore.YELLOW}      ║{Fore.CYAN}    ║
+║  {Fore.YELLOW}║{Fore.RED}  Version {VERSION} - Cross-Platform Power Tool{Fore.YELLOW}            ║{Fore.CYAN}    ║
+║  {Fore.YELLOW}╚═══════════════════════════════════════════════════════════════════╝{Fore.CYAN}    ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+{Style.RESET_ALL}
 """
 # Initialize logging
 
@@ -110,6 +115,89 @@ class Logger:
     
     def critical(self, msg):
         self.logger.critical(msg)
+
+class UIRenderer:
+    """Beautiful terminal UI rendering utilities"""
+    
+    # Box drawing characters
+    BOX_H = "═"
+    BOX_V = "║"
+    BOX_TL = "╔"
+    BOX_TR = "╗"
+    BOX_BL = "╚"
+    BOX_BR = "╝"
+    BOX_TJ = "╦"
+    BOX_BJ = "╩"
+    BOX_LJ = "╠"
+    BOX_RJ = "╣"
+    BOX_C = "╬"
+    
+    @staticmethod
+    def draw_box(width: int, height: int, title: str = "", color: str = Fore.CYAN) -> str:
+        """Draw a beautiful box with optional title"""
+        lines = []
+        top = f"{color}{UIRenderer.BOX_TL}{UIRenderer.BOX_H * (width - 2)}{UIRenderer.BOX_TR}{Style.RESET_ALL}"
+        
+        if title:
+            title_line = f"{color}{UIRenderer.BOX_V}{Style.RESET_ALL} {Fore.YELLOW}{Style.BRIGHT}{title}{Style.RESET_ALL} "
+            title_padding = width - len(title) - 4
+            if title_padding > 0:
+                title_line += " " * title_padding
+            title_line += f"{color}{UIRenderer.BOX_V}{Style.RESET_ALL}"
+            lines.append(top)
+            lines.append(title_line)
+            lines.append(f"{color}{UIRenderer.BOX_LJ}{UIRenderer.BOX_H * (width - 2)}{UIRenderer.BOX_RJ}{Style.RESET_ALL}")
+        else:
+            lines.append(top)
+        
+        for _ in range(height - 2):
+            lines.append(f"{color}{UIRenderer.BOX_V}{Style.RESET_ALL}" + " " * (width - 2) + f"{color}{UIRenderer.BOX_V}{Style.RESET_ALL}")
+        
+        lines.append(f"{color}{UIRenderer.BOX_BL}{UIRenderer.BOX_H * (width - 2)}{UIRenderer.BOX_BR}{Style.RESET_ALL}")
+        return "\n".join(lines)
+    
+    @staticmethod
+    def progress_bar(current: int, total: int, width: int = 50, label: str = "") -> str:
+        """Create a beautiful progress bar"""
+        if total == 0:
+            percent = 0
+        else:
+            percent = min(100, int((current / total) * 100))
+        
+        filled = int(width * current / total) if total > 0 else 0
+        bar = "█" * filled + "░" * (width - filled)
+        
+        result = f"{Fore.CYAN}[{Fore.GREEN}{bar}{Fore.CYAN}]{Style.RESET_ALL} {Fore.YELLOW}{percent:3d}%{Style.RESET_ALL}"
+        if label:
+            result += f" {Fore.WHITE}{label}{Style.RESET_ALL}"
+        return result
+    
+    @staticmethod
+    def print_header(text: str, width: int = 80):
+        """Print a beautiful header"""
+        print(f"\n{Fore.CYAN}{Style.BRIGHT}{'═' * width}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}{Style.BRIGHT}{text.center(width)}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}{Style.BRIGHT}{'═' * width}{Style.RESET_ALL}\n")
+    
+    @staticmethod
+    def print_success(msg: str):
+        """Print success message"""
+        print(f"{Fore.GREEN}{Style.BRIGHT}✓{Style.RESET_ALL} {Fore.GREEN}{msg}{Style.RESET_ALL}")
+    
+    @staticmethod
+    def print_error(msg: str):
+        """Print error message"""
+        print(f"{Fore.RED}{Style.BRIGHT}✗{Style.RESET_ALL} {Fore.RED}{msg}{Style.RESET_ALL}")
+    
+    @staticmethod
+    def print_warning(msg: str):
+        """Print warning message"""
+        print(f"{Fore.YELLOW}{Style.BRIGHT}⚠{Style.RESET_ALL} {Fore.YELLOW}{msg}{Style.RESET_ALL}")
+    
+    @staticmethod
+    def print_info(msg: str):
+        """Print info message"""
+        print(f"{Fore.CYAN}{Style.BRIGHT}ℹ{Style.RESET_ALL} {Fore.CYAN}{msg}{Style.RESET_ALL}")
 
 class PermissionManager:
     """Aggressive permission management for file/directory access"""
@@ -303,12 +391,37 @@ class PermissionManager:
             pass
 
 class SystemScanner:
-    """Enhanced system scanner that properly detects installed software"""
+    """Enhanced system scanner that properly detects installed software - ULTRA COMPREHENSIVE"""
     
     def __init__(self, logger):
         self.logger = logger
         self.system = platform.system()
+        self.system_version = platform.release()
+        self.architecture = platform.machine()
         self.software_cache = []
+        
+        # Enhanced OS detection
+        if self.system == "Linux":
+            try:
+                # Try to detect Linux distribution
+                if os.path.exists("/etc/os-release"):
+                    with open("/etc/os-release", "r") as f:
+                        for line in f:
+                            if line.startswith("ID="):
+                                self.distribution = line.split("=")[1].strip().strip('"')
+                                break
+                else:
+                    self.distribution = "Unknown"
+            except:
+                self.distribution = "Unknown"
+        elif self.system == "Darwin":
+            try:
+                # Get macOS version
+                result = subprocess.run(["sw_vers", "-productVersion"], 
+                                      capture_output=True, text=True)
+                self.macos_version = result.stdout.strip()
+            except:
+                self.macos_version = "Unknown"
         
     def scan_installed_software(self) -> List[Dict]:
         """Scan for all installed software - FIXED to show actual software"""
@@ -464,7 +577,7 @@ class SystemScanner:
             return default
     
     def _scan_linux_software(self) -> List[Dict]:
-        """Enhanced Linux software scanning"""
+        """Enhanced Linux software scanning - COMPREHENSIVE"""
         software = []
         
         # Try multiple package managers
@@ -473,19 +586,96 @@ class SystemScanner:
             ("rpm", ["rpm", "-qa", "--queryformat", "%{NAME}|%{VERSION}|%{SIZE}|installed\n"]),
             ("pacman", ["pacman", "-Q"]),
             ("snap", ["snap", "list"]),
-            ("flatpak", ["flatpak", "list", "--app"])
+            ("flatpak", ["flatpak", "list", "--app"]),
+            ("appimage", self._scan_appimages),  # Custom function
+            ("portage", ["equery", "list", "*"]),  # Gentoo
+            ("zypper", ["zypper", "search", "-i"]),  # openSUSE
+            ("yum", ["yum", "list", "installed"]),  # Older RHEL/CentOS
+            ("dnf", ["dnf", "list", "installed"]),  # Fedora/newer RHEL
         ]
         
         for pm_name, cmd in package_managers:
-            if shutil.which(cmd[0]):
+            if isinstance(cmd, list):
+                if shutil.which(cmd[0]):
+                    try:
+                        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                        if result.returncode == 0:
+                            software.extend(self._parse_package_output(pm_name, result.stdout))
+                    except subprocess.TimeoutExpired:
+                        self.logger.warning(f"Timeout scanning {pm_name}")
+                    except Exception as e:
+                        self.logger.error(f"Error scanning {pm_name}: {e}")
+            else:
+                # Custom function
                 try:
-                    result = subprocess.run(cmd, capture_output=True, text=True)
-                    if result.returncode == 0:
-                        software.extend(self._parse_package_output(pm_name, result.stdout))
+                    software.extend(cmd())
                 except Exception as e:
-                    self.logger.error(f"Error scanning {pm_name}: {e}")
+                    self.logger.error(f"Error in custom scanner {pm_name}: {e}")
+        
+        # Also scan common application directories
+        app_dirs = [
+            "/usr/bin",
+            "/usr/local/bin",
+            "/opt",
+            "/usr/share/applications",
+            os.path.expanduser("~/.local/bin"),
+            os.path.expanduser("~/.local/share/applications"),
+        ]
+        
+        for app_dir in app_dirs:
+            if os.path.exists(app_dir):
+                try:
+                    for item in os.listdir(app_dir):
+                        item_path = os.path.join(app_dir, item)
+                        # Check if it's an executable or .desktop file
+                        if (os.path.isfile(item_path) and 
+                            (os.access(item_path, os.X_OK) or item.endswith('.desktop'))):
+                            if not any(s['name'] == item for s in software):
+                                software.append({
+                                    "name": item,
+                                    "version": "Unknown",
+                                    "publisher": "System",
+                                    "install_date": "Unknown",
+                                    "size": os.path.getsize(item_path) // 1024 if os.path.isfile(item_path) else 0,
+                                    "uninstall_string": f"rm -f '{item_path}'",
+                                    "install_location": item_path,
+                                    "type": "installed_software",
+                                    "platform": "Linux"
+                                })
+                except PermissionError:
+                    continue
         
         return software
+    
+    def _scan_appimages(self) -> List[Dict]:
+        """Scan for AppImage files"""
+        appimages = []
+        search_dirs = [
+            os.path.expanduser("~/Applications"),
+            os.path.expanduser("~/bin"),
+            "/opt",
+            "/usr/local/bin",
+        ]
+        
+        for search_dir in search_dirs:
+            if os.path.exists(search_dir):
+                for root, dirs, files in os.walk(search_dir):
+                    for file in files:
+                        if file.endswith('.AppImage') or 'appimage' in file.lower():
+                            file_path = os.path.join(root, file)
+                            appimages.append({
+                                "name": file,
+                                "version": "Unknown",
+                                "publisher": "AppImage",
+                                "install_date": "Unknown",
+                                "size": os.path.getsize(file_path) // 1024 // 1024,
+                                "uninstall_string": f"rm -f '{file_path}'",
+                                "install_location": file_path,
+                                "type": "appimage",
+                                "platform": "Linux"
+                            })
+        
+        return appimages
     
     def _parse_package_output(self, pm_name: str, output: str) -> List[Dict]:
         """Parse package manager output"""
@@ -575,57 +765,80 @@ class SystemScanner:
         return processes
     
     def _scan_macos_software(self) -> List[Dict]:
-        """Enhanced macOS software scanning"""
+        """Enhanced macOS software scanning - COMPREHENSIVE"""
         software = []
         
         # Scan Applications directories
         app_dirs = [
             "/Applications",
             os.path.expanduser("~/Applications"),
-            "/System/Applications"
+            "/System/Applications",
+            "/System/Library/CoreServices",
+            "/usr/local/Cellar",  # Homebrew Cask
         ]
         
         for app_dir in app_dirs:
             if os.path.exists(app_dir):
-                for item in os.listdir(app_dir):
-                    if item.endswith(".app"):
-                        app_path = os.path.join(app_dir, item)
-                        try:
-                            info_plist = os.path.join(app_path, "Contents", "Info.plist")
-                            
-                            # Get version from Info.plist if possible
-                            version = "Unknown"
-                            if os.path.exists(info_plist):
-                                try:
-                                    # Use plistlib to read version
-                                    import plistlib
-                                    with open(info_plist, 'rb') as f:
-                                        plist = plistlib.load(f)
-                                        version = plist.get('CFBundleShortVersionString', 'Unknown')
-                                except:
-                                    pass
-                            
-                            software.append({
-                                "name": item[:-4],  # Remove .app
-                                "version": version,
-                                "publisher": "Unknown",
-                                "install_date": "Unknown",
-                                "size": self._get_dir_size(app_path),
-                                "uninstall_string": f"sudo rm -rf '{app_path}'",
-                                "install_location": app_path,
-                                "type": "macos_app",
-                                "platform": "Darwin"
-                            })
-                        except Exception:
-                            continue
+                try:
+                    for item in os.listdir(app_dir):
+                        if item.endswith(".app") or (app_dir.endswith("Cellar") and os.path.isdir(os.path.join(app_dir, item))):
+                            app_path = os.path.join(app_dir, item)
+                            try:
+                                if item.endswith(".app"):
+                                    info_plist = os.path.join(app_path, "Contents", "Info.plist")
+                                    
+                                    # Get version from Info.plist if possible
+                                    version = "Unknown"
+                                    publisher = "Unknown"
+                                    if os.path.exists(info_plist):
+                                        try:
+                                            import plistlib
+                                            with open(info_plist, 'rb') as f:
+                                                plist = plistlib.load(f)
+                                                version = plist.get('CFBundleShortVersionString', 
+                                                                   plist.get('CFBundleVersion', 'Unknown'))
+                                                publisher = plist.get('CFBundleIdentifier', 'Unknown')
+                                        except:
+                                            pass
+                                    
+                                    software.append({
+                                        "name": item[:-4],  # Remove .app
+                                        "version": version,
+                                        "publisher": publisher,
+                                        "install_date": "Unknown",
+                                        "size": self._get_dir_size(app_path),
+                                        "uninstall_string": f"sudo rm -rf '{app_path}'",
+                                        "install_location": app_path,
+                                        "type": "macos_app",
+                                        "platform": "Darwin"
+                                    })
+                                elif app_dir.endswith("Cellar"):
+                                    # Homebrew formula
+                                    software.append({
+                                        "name": item,
+                                        "version": "Unknown",
+                                        "publisher": "Homebrew",
+                                        "install_date": "Unknown",
+                                        "size": self._get_dir_size(app_path),
+                                        "uninstall_string": f"brew uninstall {item}",
+                                        "install_location": app_path,
+                                        "type": "homebrew_formula",
+                                        "platform": "Darwin"
+                                    })
+                            except Exception:
+                                continue
+                except PermissionError:
+                    continue
         
         # Check Homebrew
         if shutil.which("brew"):
             try:
+                # List all Homebrew packages
                 result = subprocess.run(
                     ["brew", "list", "--versions"],
                     capture_output=True,
-                    text=True
+                    text=True,
+                    timeout=30
                 )
                 for line in result.stdout.splitlines():
                     parts = line.split()
@@ -640,6 +853,53 @@ class SystemScanner:
                             "type": "homebrew_package",
                             "platform": "Darwin"
                         })
+                
+                # Check Homebrew Cask
+                result = subprocess.run(
+                    ["brew", "list", "--cask", "--versions"],
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+                for line in result.stdout.splitlines():
+                    parts = line.split()
+                    if len(parts) >= 2:
+                        software.append({
+                            "name": parts[0],
+                            "version": " ".join(parts[1:]),
+                            "publisher": "Homebrew Cask",
+                            "install_date": "Unknown",
+                            "size": 0,
+                            "uninstall_string": f"brew uninstall --cask {parts[0]}",
+                            "type": "homebrew_cask",
+                            "platform": "Darwin"
+                        })
+            except Exception as e:
+                self.logger.debug(f"Error scanning Homebrew: {e}")
+        
+        # Check MacPorts
+        if shutil.which("port"):
+            try:
+                result = subprocess.run(
+                    ["port", "installed"],
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+                for line in result.stdout.splitlines():
+                    if line.strip() and not line.startswith("The following"):
+                        parts = line.split()
+                        if len(parts) >= 2:
+                            software.append({
+                                "name": parts[0],
+                                "version": parts[1] if len(parts) > 1 else "Unknown",
+                                "publisher": "MacPorts",
+                                "install_date": "Unknown",
+                                "size": 0,
+                                "uninstall_string": f"sudo port uninstall {parts[0]}",
+                                "type": "macports_package",
+                                "platform": "Darwin"
+                            })
             except Exception:
                 pass
         
@@ -753,11 +1013,11 @@ class SoftwareRemover:
         return True
     
     def _ultra_force_remove(self, path: str):
-        """Ultra aggressive removal for stubborn files/directories"""
+        """Ultra aggressive removal for stubborn files/directories - ENHANCED"""
         self.logger.warning(f"Using ultra force removal on: {path}")
         
         if self.system == "Windows":
-            # Boot-time deletion scheduling
+            # Method 1: Boot-time deletion scheduling
             try:
                 import win32file
                 win32file.MoveFileEx(
@@ -769,11 +1029,97 @@ class SoftwareRemover:
             except:
                 pass
             
-            # Try using short path names
+            # Method 2: Try using short path names
             try:
                 short_path = win32api.GetShortPathName(path)
                 os.system(f'del /f /s /q "{short_path}"')
                 os.system(f'rd /s /q "{short_path}"')
+            except:
+                pass
+            
+            # Method 3: Use PowerShell with -Force -Recurse
+            try:
+                ps_cmd = f'Remove-Item -Path "{path}" -Force -Recurse -ErrorAction SilentlyContinue'
+                subprocess.run(
+                    ["powershell", "-Command", ps_cmd],
+                    capture_output=True,
+                    timeout=30
+                )
+            except:
+                pass
+            
+            # Method 4: Use takeown + icacls + del
+            try:
+                subprocess.run(f'takeown /f "{path}" /r /d y', shell=True, capture_output=True)
+                subprocess.run(f'icacls "{path}" /grant administrators:F /t /c /q', shell=True, capture_output=True)
+                subprocess.run(f'rd /s /q "{path}"', shell=True, capture_output=True)
+            except:
+                pass
+            
+            # Method 5: Use robocopy mirror trick (creates empty dir, mirrors to target, deletes)
+            try:
+                temp_empty = tempfile.mkdtemp()
+                subprocess.run(
+                    f'robocopy "{temp_empty}" "{path}" /MIR /NFL /NDL /NJH /NJS',
+                    shell=True,
+                    capture_output=True
+                )
+                shutil.rmtree(temp_empty, ignore_errors=True)
+            except:
+                pass
+        else:
+            # Unix/Linux/MacOS ultra force methods
+            # Method 1: chattr -R -i (remove immutable flag) then delete
+            try:
+                subprocess.run(['sudo', 'chattr', '-R', '-i', path], capture_output=True, timeout=10)
+                subprocess.run(['sudo', 'rm', '-rf', path], capture_output=True)
+            except:
+                pass
+            
+            # Method 2: Use find with -delete
+            try:
+                subprocess.run(['sudo', 'find', path, '-delete'], capture_output=True, timeout=30)
+            except:
+                pass
+            
+            # Method 3: Use shred for files, then rm for dirs
+            if os.path.isfile(path):
+                try:
+                    subprocess.run(['sudo', 'shred', '-f', '-u', '-z', path], capture_output=True, timeout=60)
+                except:
+                    subprocess.run(['sudo', 'rm', '-f', path], capture_output=True)
+            else:
+                # For directories, recursively shred all files then remove
+                try:
+                    for root, dirs, files in os.walk(path, topdown=False):
+                        for file in files:
+                            file_path = os.path.join(root, file)
+                            try:
+                                subprocess.run(['sudo', 'shred', '-f', '-u', '-z', file_path], 
+                                             capture_output=True, timeout=10)
+                            except:
+                                subprocess.run(['sudo', 'rm', '-f', file_path], capture_output=True)
+                        for dir_name in dirs:
+                            dir_path = os.path.join(root, dir_name)
+                            subprocess.run(['sudo', 'rmdir', dir_path], capture_output=True)
+                    subprocess.run(['sudo', 'rmdir', path], capture_output=True)
+                except:
+                    subprocess.run(['sudo', 'rm', '-rf', path], capture_output=True)
+            
+            # Method 4: Use lsof to kill processes, then remove
+            try:
+                result = subprocess.run(['lsof', path], capture_output=True, text=True)
+                if result.returncode == 0:
+                    for line in result.stdout.splitlines()[1:]:
+                        parts = line.split()
+                        if len(parts) > 1:
+                            pid = parts[1]
+                            try:
+                                subprocess.run(['sudo', 'kill', '-9', pid], capture_output=True)
+                            except:
+                                pass
+                    time.sleep(0.5)
+                    subprocess.run(['sudo', 'rm', '-rf', path], capture_output=True)
             except:
                 pass
     
@@ -1188,7 +1534,7 @@ class FileDestroyer:
         self.permission_manager = PermissionManager(logger)
         
     def secure_delete(self, file_path: str, passes: int = SECURE_DELETE_PASSES) -> bool:
-        """Securely delete a file with multiple overwrites"""
+        """Securely delete a file with multiple overwrites - ENHANCED with more patterns"""
         if not os.path.exists(file_path):
             self.logger.error(f"File not found: {file_path}")
             return False
@@ -1202,26 +1548,60 @@ class FileDestroyer:
             
             file_size = os.path.getsize(file_path)
             
+            # Enhanced wipe patterns (Gutmann + DoD 5220.22-M + Random)
+            wipe_patterns = [
+                b'\x00',  # Pass 1: All zeros
+                b'\xFF',  # Pass 2: All ones
+                b'\xAA',  # Pass 3: 10101010
+                b'\x55',  # Pass 4: 01010101
+                b'\x92',  # Pass 5: Random pattern 1
+                b'\x49',  # Pass 6: Random pattern 2
+                b'\x24',  # Pass 7: Random pattern 3
+            ]
+            
             with open(file_path, "ba+", buffering=0) as f:
                 for pass_num in range(passes):
                     f.seek(0)
                     
-                    # DoD 5220.22-M patterns
-                    if pass_num % 3 == 0:
-                        pattern = b'\x00'
-                    elif pass_num % 3 == 1:
-                        pattern = b'\xFF'
+                    # Select pattern based on pass number
+                    if pass_num < len(wipe_patterns):
+                        pattern = wipe_patterns[pass_num]
                     else:
+                        # For additional passes, use random data
                         pattern = os.urandom(1)
                     
-                    # Write pattern
-                    for _ in range(file_size):
-                        f.write(pattern)
+                    # Write pattern across entire file
+                    chunk_size = 1024 * 1024  # 1MB chunks for efficiency
+                    written = 0
+                    while written < file_size:
+                        chunk = pattern * min(chunk_size, file_size - written)
+                        f.write(chunk)
+                        written += len(chunk)
                     
                     f.flush()
                     os.fsync(f.fileno())
                     
+                    # Final pass: write random data
+                    if pass_num == passes - 1:
+                        f.seek(0)
+                        written = 0
+                        while written < file_size:
+                            chunk = os.urandom(min(chunk_size, file_size - written))
+                            f.write(chunk)
+                            written += len(chunk)
+                        f.flush()
+                        os.fsync(f.fileno())
+                    
                     self.logger.info(f"Overwrite pass {pass_num + 1}/{passes} completed")
+            
+            # Rename file to random name before deletion (makes recovery harder)
+            try:
+                random_name = os.path.join(os.path.dirname(file_path), 
+                                          f".tmp_{os.urandom(8).hex()}")
+                os.rename(file_path, random_name)
+                file_path = random_name
+            except:
+                pass
             
             # Final deletion
             os.remove(file_path)
@@ -1415,7 +1795,7 @@ class KeyboardHandler:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
 class TerminalUI:
-    """Enhanced terminal UI with proper navigation"""
+    """Enhanced terminal UI with beautiful rendering and proper navigation"""
     
     def __init__(self, scanner, remover, destroyer, logger):
         self.scanner = scanner
@@ -1429,6 +1809,7 @@ class TerminalUI:
         self.page = 0
         self.keyboard = KeyboardHandler()
         self.filter_type = "all"  # all, software, process
+        self.ui = UIRenderer()
         
     def run(self):
         """Main UI loop"""
@@ -1463,41 +1844,73 @@ class TerminalUI:
         print(Fore.CYAN + LOGO + Style.RESET_ALL)
     
     def main_menu(self) -> str:
-        """Display main menu"""
-        print(f"{Fore.GREEN}=== Main Menu ==={Style.RESET_ALL}\n")
-        print("1. Scan System Software")
-        print("2. Remove Software")
-        print("3. File Destroyer")
-        print("4. Settings")
-        print("5. View Logs")
-        print("6. Exit")
-        print(f"\n{Fore.YELLOW}⚠️  Use with caution! Always backup important data.{Style.RESET_ALL}")
+        """Display beautiful main menu"""
+        self.ui.print_header("MAIN MENU", 80)
         
-        return input(f"\n{Fore.CYAN}Select option: {Style.RESET_ALL}")
+        menu_items = [
+            ("1", "Scan System Software", "🔍 Detect all installed software and processes"),
+            ("2", "Remove Software", "🗑️  Remove any software with advanced methods"),
+            ("3", "File Destroyer", "🔥 Securely delete files beyond recovery"),
+            ("4", "Settings", "⚙️  Configure Terminus options"),
+            ("5", "View Logs", "📋 View operation history"),
+            ("6", "Exit", "👋 Exit Terminus")
+        ]
+        
+        for num, title, desc in menu_items:
+            print(f"  {Fore.CYAN}{Style.BRIGHT}{num}.{Style.RESET_ALL} {Fore.GREEN}{title:<25}{Style.RESET_ALL} {Fore.WHITE}{desc}{Style.RESET_ALL}")
+        
+        print(f"\n{Fore.YELLOW}{Style.BRIGHT}⚠️  WARNING:{Style.RESET_ALL} {Fore.YELLOW}Use with extreme caution! Always backup important data.{Style.RESET_ALL}")
+        print(f"{Fore.RED}   This tool can permanently remove ANY software or file!{Style.RESET_ALL}\n")
+        
+        return input(f"{Fore.CYAN}{Style.BRIGHT}➜ Select option: {Style.RESET_ALL}")
     
     def scan_software(self):
-        """Scan and display software"""
-        print(f"\n{Fore.YELLOW}Scanning system for installed software...{Style.RESET_ALL}")
-        print("This may take a few moments...\n")
+        """Scan and display software with beautiful progress"""
+        self.clear_screen()
+        self.show_logo()
+        self.ui.print_header("SYSTEM SCAN", 80)
         
-        # Progress indicator
-        with self.progress_spinner("Scanning"):
-            self.software_list = self.scanner.scan_installed_software()
+        print(f"{Fore.CYAN}Scanning system for installed software...{Style.RESET_ALL}")
+        print(f"{Fore.WHITE}This may take a few moments...{Style.RESET_ALL}\n")
+        
+        # Enhanced progress indicator with progress bar
+        software_list = []
+        scan_stages = [
+            ("Scanning Windows Registry...", lambda: self.scanner._scan_windows_software() if platform.system() == "Windows" else []),
+            ("Scanning Windows Store Apps...", lambda: self.scanner._scan_windows_store_apps() if platform.system() == "Windows" else []),
+            ("Scanning Linux Packages...", lambda: self.scanner._scan_linux_software() if platform.system() == "Linux" else []),
+            ("Scanning macOS Applications...", lambda: self.scanner._scan_macos_software() if platform.system() == "Darwin" else []),
+            ("Scanning Running Processes...", lambda: self.scanner._scan_running_processes()),
+        ]
+        
+        for stage_name, stage_func in scan_stages:
+            print(f"{Fore.YELLOW}⏳ {stage_name}{Style.RESET_ALL}", end="", flush=True)
+            try:
+                result = stage_func()
+                if isinstance(result, list):
+                    software_list.extend(result)
+                print(f" {Fore.GREEN}✓{Style.RESET_ALL}")
+            except Exception as e:
+                print(f" {Fore.RED}✗{Style.RESET_ALL} ({str(e)[:30]})")
         
         # Sort by type then name
-        self.software_list.sort(key=lambda x: (x['type'], x['name'].lower()))
+        software_list.sort(key=lambda x: (x['type'], x['name'].lower()))
+        self.software_list = software_list
         self.filtered_list = self.software_list.copy()
         
-        # Show summary
+        # Show beautiful summary
         software_count = len([s for s in self.software_list if s['type'] != 'running_process'])
         process_count = len([s for s in self.software_list if s['type'] == 'running_process'])
         
-        print(f"\n{Fore.GREEN}Scan complete!{Style.RESET_ALL}")
-        print(f"Found: {software_count} installed software packages")
-        print(f"Found: {process_count} running processes")
-        print(f"Total: {len(self.software_list)} items")
+        print(f"\n{Fore.GREEN}{Style.BRIGHT}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.GREEN}✓ Scan Complete!{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{Style.BRIGHT}╠════════════════════════════════════════════════════════════╣{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.CYAN}Installed Software:{Style.RESET_ALL} {Fore.YELLOW}{software_count:>6}{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.CYAN}Running Processes:{Style.RESET_ALL}  {Fore.YELLOW}{process_count:>6}{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.CYAN}Total Items:{Style.RESET_ALL}         {Fore.YELLOW}{len(self.software_list):>6}{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}{Style.BRIGHT}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
         
-        input("\nPress Enter to continue...")
+        input(f"{Fore.CYAN}Press Enter to continue...{Style.RESET_ALL}")
     
     def remove_software_menu(self):
         """Enhanced software removal interface with proper navigation"""
@@ -1630,61 +2043,90 @@ class TerminalUI:
                     break
     
     def confirm_and_remove(self, software: Dict, force: bool = False):
-        """Confirm and remove software"""
+        """Confirm and remove software with beautiful UI"""
         self.clear_screen()
         self.show_logo()
         
-        print(f"{Fore.YELLOW}=== Confirm Removal ==={Style.RESET_ALL}\n")
-        print(f"Name: {software['name']}")
-        print(f"Version: {software['version']}")
-        print(f"Type: {software['type']}")
-        print(f"Publisher: {software.get('publisher', 'Unknown')}")
+        self.ui.print_header("CONFIRM REMOVAL", 80)
+        
+        # Display software info in a box
+        print(f"{Fore.CYAN}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.YELLOW}{Style.BRIGHT}Software Information:{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}╠════════════════════════════════════════════════════════════╣{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Name:{Style.RESET_ALL}       {Fore.GREEN}{software['name']}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Version:{Style.RESET_ALL}    {Fore.GREEN}{software['version']}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Type:{Style.RESET_ALL}       {Fore.GREEN}{software['type']}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Publisher:{Style.RESET_ALL}  {Fore.GREEN}{software.get('publisher', 'Unknown')}{Style.RESET_ALL}")
         
         if software.get('install_location'):
-            print(f"Location: {software['install_location']}")
+            loc = software['install_location']
+            if len(loc) > 50:
+                loc = loc[:47] + "..."
+            print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Location:{Style.RESET_ALL}   {Fore.GREEN}{loc}{Style.RESET_ALL}")
+        
+        print(f"{Fore.CYAN}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
         
         if force:
-            print(f"\n{Fore.RED}⚠️  FORCE REMOVAL - Will aggressively delete all traces!{Style.RESET_ALL}")
-            print("This will:")
-            print("  • Take ownership of all files")
-            print("  • Kill all related processes")
-            print("  • Delete all files and registry entries")
-            print("  • Remove all services and scheduled tasks")
+            print(f"{Fore.RED}{Style.BRIGHT}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.RED}⚠️  FORCE REMOVAL MODE - EXTREME DESTRUCTION ⚠️{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}╠════════════════════════════════════════════════════════════╣{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.YELLOW}This will:{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}    {Fore.WHITE}• Take ownership of ALL files{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}    {Fore.WHITE}• Kill ALL related processes{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}    {Fore.WHITE}• Delete ALL files and directories{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}    {Fore.WHITE}• Remove ALL registry entries{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}    {Fore.WHITE}• Remove ALL services and scheduled tasks{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}    {Fore.WHITE}• Use multiple deletion methods{Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
         
-        print(f"\n{Fore.RED}This action cannot be undone!{Style.RESET_ALL}")
+        print(f"{Fore.RED}{Style.BRIGHT}⚠️  WARNING: This action CANNOT be undone!{Style.RESET_ALL}\n")
         
-        confirm = input(f"\n{Fore.CYAN}Type 'YES' to confirm removal: {Style.RESET_ALL}")
+        confirm = input(f"{Fore.CYAN}{Style.BRIGHT}Type 'YES' to confirm removal: {Style.RESET_ALL}")
         
         if confirm == 'YES':
-            print(f"\n{Fore.YELLOW}Removing {software['name']}...{Style.RESET_ALL}")
+            print(f"\n{Fore.YELLOW}Removing {software['name']}...{Style.RESET_ALL}\n")
             
-            success = self.remover.remove_software(software, force=force)
+            # Show progress
+            with self.progress_spinner("Removing"):
+                success = self.remover.remove_software(software, force=force)
             
             if success:
-                print(f"\n{Fore.GREEN}✓ Software removed successfully!{Style.RESET_ALL}")
+                print(f"\n{Fore.GREEN}{Style.BRIGHT}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.GREEN}✓ Software removed successfully!{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}{Style.BRIGHT}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
                 # Remove from lists
                 if software in self.software_list:
                     self.software_list.remove(software)
                 if software in self.filtered_list:
                     self.filtered_list.remove(software)
             else:
-                print(f"\n{Fore.RED}✗ Removal failed! Check logs for details.{Style.RESET_ALL}")
-                print("Try using Force Remove (F) option.")
+                print(f"\n{Fore.RED}{Style.BRIGHT}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+                print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.RED}✗ Removal failed! Check logs for details.{Style.RESET_ALL}")
+                print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.YELLOW}Try using Force Remove (F) option.{Style.RESET_ALL}")
+                print(f"{Fore.RED}{Style.BRIGHT}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
             
-            input("\nPress Enter to continue...")
+            input(f"{Fore.CYAN}Press Enter to continue...{Style.RESET_ALL}")
     
     def file_destroyer_menu(self):
-        """File destruction interface"""
+        """File destruction interface with beautiful UI"""
         while True:
             self.clear_screen()
             self.show_logo()
-            print(f"{Fore.GREEN}=== File Destroyer ==={Style.RESET_ALL}\n")
-            print("1. Secure Delete File")
-            print("2. Secure Delete Directory")
-            print("3. Wipe Free Space")
-            print("4. Back to Main Menu")
+            self.ui.print_header("FILE DESTROYER", 80)
             
-            choice = input(f"\n{Fore.CYAN}Select option: {Style.RESET_ALL}")
+            menu_items = [
+                ("1", "Secure Delete File", "🔥 Permanently delete a single file (7-pass wipe)"),
+                ("2", "Secure Delete Directory", "🔥 Permanently delete entire directory tree"),
+                ("3", "Wipe Free Space", "🧹 Overwrite free space to prevent recovery"),
+                ("4", "Back to Main Menu", "← Return to main menu")
+            ]
+            
+            for num, title, desc in menu_items:
+                print(f"  {Fore.CYAN}{Style.BRIGHT}{num}.{Style.RESET_ALL} {Fore.GREEN}{title:<25}{Style.RESET_ALL} {Fore.WHITE}{desc}{Style.RESET_ALL}")
+            
+            print(f"\n{Fore.RED}{Style.BRIGHT}⚠️  WARNING: File destruction is PERMANENT and IRREVERSIBLE!{Style.RESET_ALL}\n")
+            
+            choice = input(f"{Fore.CYAN}{Style.BRIGHT}➜ Select option: {Style.RESET_ALL}")
             
             if choice == '1':
                 self.secure_delete_file()
@@ -1696,33 +2138,55 @@ class TerminalUI:
                 break
     
     def secure_delete_file(self):
-        """Secure file deletion"""
+        """Secure file deletion with beautiful UI"""
         self.clear_screen()
-        print(f"{Fore.YELLOW}=== Secure File Deletion ==={Style.RESET_ALL}\n")
-        print("Enter the full path to the file you want to permanently delete.")
-        print(f"{Fore.RED}WARNING: This will destroy the file beyond recovery!{Style.RESET_ALL}\n")
+        self.show_logo()
+        self.ui.print_header("SECURE FILE DELETION", 80)
         
-        file_path = input("File path: ").strip().strip('"')
+        print(f"{Fore.WHITE}Enter the full path to the file you want to permanently delete.{Style.RESET_ALL}")
+        print(f"{Fore.RED}{Style.BRIGHT}WARNING: This will destroy the file beyond recovery!{Style.RESET_ALL}\n")
+        
+        file_path = input(f"{Fore.CYAN}File path: {Style.RESET_ALL}").strip().strip('"')
         
         if os.path.exists(file_path) and os.path.isfile(file_path):
-            print(f"\nFile: {file_path}")
-            print(f"Size: {os.path.getsize(file_path) / 1024 / 1024:.2f} MB")
+            file_size = os.path.getsize(file_path)
+            file_size_mb = file_size / 1024 / 1024
             
-            print(f"\n{Fore.RED}⚠️  This will permanently destroy the file!{Style.RESET_ALL}")
-            print("The file will be overwritten multiple times before deletion.")
+            print(f"\n{Fore.CYAN}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.YELLOW}{Style.BRIGHT}File Information:{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}╠════════════════════════════════════════════════════════════╣{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Path:{Style.RESET_ALL}  {Fore.GREEN}{file_path[:60]}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Size:{Style.RESET_ALL}  {Fore.GREEN}{file_size_mb:.2f} MB ({file_size:,} bytes){Style.RESET_ALL}")
+            print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Wipes:{Style.RESET_ALL} {Fore.GREEN}{SECURE_DELETE_PASSES} passes (DoD 5220.22-M + Random){Style.RESET_ALL}")
+            print(f"{Fore.CYAN}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
             
-            confirm = input(f"\n{Fore.CYAN}Type 'DELETE' to confirm: {Style.RESET_ALL}")
+            print(f"{Fore.RED}{Style.BRIGHT}⚠️  This will PERMANENTLY destroy the file!{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}The file will be overwritten {SECURE_DELETE_PASSES} times before deletion.{Style.RESET_ALL}\n")
+            
+            confirm = input(f"{Fore.CYAN}{Style.BRIGHT}Type 'DELETE' to confirm: {Style.RESET_ALL}")
             
             if confirm == 'DELETE':
-                print(f"\n{Fore.YELLOW}Securely deleting file...{Style.RESET_ALL}")
-                if self.destroyer.secure_delete(file_path):
-                    print(f"\n{Fore.GREEN}✓ File securely deleted!{Style.RESET_ALL}")
+                print(f"\n{Fore.YELLOW}Securely deleting file...{Style.RESET_ALL}\n")
+                
+                # Show progress
+                start_time = time.time()
+                success = self.destroyer.secure_delete(file_path)
+                elapsed = time.time() - start_time
+                
+                if success:
+                    print(f"\n{Fore.GREEN}{Style.BRIGHT}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+                    print(f"{Fore.GREEN}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.GREEN}✓ File securely deleted!{Style.RESET_ALL}")
+                    print(f"{Fore.GREEN}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.WHITE}Time taken: {elapsed:.2f} seconds{Style.RESET_ALL}")
+                    print(f"{Fore.GREEN}{Style.BRIGHT}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
                 else:
-                    print(f"\n{Fore.RED}✗ Deletion failed! Check permissions.{Style.RESET_ALL}")
+                    print(f"\n{Fore.RED}{Style.BRIGHT}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+                    print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.RED}✗ Deletion failed! Check permissions.{Style.RESET_ALL}")
+                    print(f"{Fore.RED}{Style.BRIGHT}║{Style.RESET_ALL}  {Fore.YELLOW}Try running as Administrator/Root{Style.RESET_ALL}")
+                    print(f"{Fore.RED}{Style.BRIGHT}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
         else:
-            print(f"\n{Fore.RED}File not found or is a directory!{Style.RESET_ALL}")
+            print(f"\n{Fore.RED}✗ File not found or is a directory!{Style.RESET_ALL}\n")
         
-        input("\nPress Enter to continue...")
+        input(f"{Fore.CYAN}Press Enter to continue...{Style.RESET_ALL}")
     
     def secure_delete_directory(self):
         """Secure directory deletion"""
@@ -1787,23 +2251,31 @@ class TerminalUI:
         input("\nPress Enter to continue...")
     
     def settings_menu(self):
-        """Settings menu"""
+        """Settings menu with beautiful UI"""
         while True:
             self.clear_screen()
             self.show_logo()
-            print(f"{Fore.GREEN}=== Settings ==={Style.RESET_ALL}\n")
+            self.ui.print_header("SETTINGS", 80)
             
-            print(f"1. Dry Run Mode: {Fore.YELLOW}{'ON' if self.remover.dry_run else 'OFF'}{Style.RESET_ALL}")
-            print(f"2. Log Level: {Fore.YELLOW}{logging.getLevelName(logging.getLogger().level)}{Style.RESET_ALL}")
-            print(f"3. Page Size: {Fore.YELLOW}{self.page_size} items{Style.RESET_ALL}")
-            print("4. Clear Logs")
-            print("5. System Info")
-            print("6. Back to Main Menu")
+            menu_items = [
+                ("1", f"Dry Run Mode: {Fore.YELLOW}{'ON' if self.remover.dry_run else 'OFF'}{Style.RESET_ALL}", "Test mode - no actual deletions"),
+                ("2", f"Log Level: {Fore.YELLOW}{logging.getLevelName(logging.getLogger().level)}{Style.RESET_ALL}", "Set logging verbosity"),
+                ("3", f"Page Size: {Fore.YELLOW}{self.page_size} items{Style.RESET_ALL}", "Items per page in lists"),
+                ("4", "Clear Logs", "Delete all log files"),
+                ("5", "System Info", "Display system information"),
+                ("6", "Back to Main Menu", "← Return to main menu")
+            ]
             
-            choice = input(f"\n{Fore.CYAN}Select option: {Style.RESET_ALL}")
+            for num, title, desc in menu_items:
+                print(f"  {Fore.CYAN}{Style.BRIGHT}{num}.{Style.RESET_ALL} {title:<40} {Fore.WHITE}{desc}{Style.RESET_ALL}")
+            
+            choice = input(f"\n{Fore.CYAN}{Style.BRIGHT}➜ Select option: {Style.RESET_ALL}")
             
             if choice == '1':
                 self.remover.set_dry_run(not self.remover.dry_run)
+                status = "ENABLED" if self.remover.dry_run else "DISABLED"
+                print(f"\n{Fore.GREEN}Dry Run Mode {status}{Style.RESET_ALL}")
+                time.sleep(1)
             elif choice == '2':
                 self.change_log_level()
             elif choice == '3':
@@ -1831,32 +2303,64 @@ class TerminalUI:
         time.sleep(1)
     
     def show_system_info(self):
-        """Display system information"""
+        """Display beautiful system information"""
         self.clear_screen()
-        print(f"{Fore.GREEN}=== System Information ==={Style.RESET_ALL}\n")
+        self.show_logo()
+        self.ui.print_header("SYSTEM INFORMATION", 80)
         
-        print(f"OS: {platform.system()} {platform.release()}")
-        print(f"Platform: {platform.platform()}")
-        print(f"Architecture: {platform.machine()}")
-        print(f"Processor: {platform.processor()}")
-        print(f"Python: {sys.version}")
+        # Get system info
+        os_name = platform.system()
+        os_release = platform.release()
+        arch = platform.machine()
+        processor = platform.processor()
+        python_ver = sys.version.split()[0]
         
-        print(f"\n{Fore.CYAN}Privileges:{Style.RESET_ALL}")
-        if platform.system() == "Windows":
+        # Privileges
+        if os_name == "Windows":
             is_admin = ctypes.windll.shell32.IsUserAnAdmin()
-            print(f"Administrator: {'Yes' if is_admin else 'No'}")
+            privileges = "Administrator" if is_admin else "Standard User"
         else:
-            print(f"Root access: {'Yes' if os.geteuid() == 0 else 'No'}")
+            privileges = "Root" if os.geteuid() == 0 else "Standard User"
         
-        print(f"\n{Fore.CYAN}Disk Space:{Style.RESET_ALL}")
+        # Memory info
+        mem = psutil.virtual_memory()
+        mem_total = mem.total // (1024**3)
+        mem_available = mem.available // (1024**3)
+        mem_percent = mem.percent
+        
+        print(f"{Fore.CYAN}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.YELLOW}{Style.BRIGHT}Operating System:{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}╠════════════════════════════════════════════════════════════╣{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}OS:{Style.RESET_ALL}         {Fore.GREEN}{os_name} {os_release}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Architecture:{Style.RESET_ALL} {Fore.GREEN}{arch}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Processor:{Style.RESET_ALL}   {Fore.GREEN}{processor[:50]}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Python:{Style.RESET_ALL}     {Fore.GREEN}{python_ver}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Privileges:{Style.RESET_ALL} {Fore.GREEN}{privileges}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
+        
+        print(f"{Fore.CYAN}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.YELLOW}{Style.BRIGHT}Memory:{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}╠════════════════════════════════════════════════════════════╣{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Total:{Style.RESET_ALL}      {Fore.GREEN}{mem_total} GB{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Available:{Style.RESET_ALL} {Fore.GREEN}{mem_available} GB ({100-mem_percent}%){Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}Used:{Style.RESET_ALL}      {Fore.GREEN}{mem_percent}%{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
+        
+        print(f"{Fore.CYAN}╔════════════════════════════════════════════════════════════╗{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.YELLOW}{Style.BRIGHT}Disk Space:{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}╠════════════════════════════════════════════════════════════╣{Style.RESET_ALL}")
         for partition in psutil.disk_partitions():
             try:
                 usage = psutil.disk_usage(partition.mountpoint)
-                print(f"{partition.mountpoint}: {usage.free // (1024**3)}GB free of {usage.total // (1024**3)}GB")
+                total_gb = usage.total // (1024**3)
+                free_gb = usage.free // (1024**3)
+                used_percent = (usage.used / usage.total) * 100
+                print(f"{Fore.CYAN}║{Style.RESET_ALL}  {Fore.WHITE}{partition.mountpoint:<15}{Style.RESET_ALL} {Fore.GREEN}{free_gb:>6} GB free / {total_gb:>6} GB total ({used_percent:.1f}% used){Style.RESET_ALL}")
             except:
                 pass
+        print(f"{Fore.CYAN}╚════════════════════════════════════════════════════════════╝{Style.RESET_ALL}\n")
         
-        input("\nPress Enter to continue...")
+        input(f"{Fore.CYAN}Press Enter to continue...{Style.RESET_ALL}")
     
     def change_log_level(self):
         """Change logging level"""
@@ -1995,7 +2499,9 @@ def main():
     
     logger.info(f"Starting {APP_NAME} v{VERSION}")
     logger.info(f"Platform: {platform.system()} {platform.release()}")
+    logger.info(f"Architecture: {platform.machine()}")
     logger.info(f"Admin privileges: {'Yes' if check_admin() else 'No'}")
+    logger.info(f"Python version: {sys.version.split()[0]}")
     
     # Check for admin privileges
     if not check_admin():
@@ -2017,21 +2523,33 @@ def main():
         if response.lower() != 'y':
             sys.exit(0)
     
-    # Safety warning
-    print(f"\n{Fore.RED}{'='*60}{Style.RESET_ALL}")
-    print(f"{Fore.RED}⚠️  IMPORTANT SAFETY WARNING ⚠️{Style.RESET_ALL}")
-    print(f"{Fore.RED}{'='*60}{Style.RESET_ALL}")
-    print("\nTerminus FIXED VERSION is a powerful tool that can:")
-    print("  • Remove ANY software including system components")
-    print("  • Delete ANY file regardless of permissions")
-    print("  • Modify critical system settings")
-    print("  • Potentially damage your operating system")
-    print("\n⚡ This version has enhanced permission bypassing!")
-    print("⚡ Use ONLY if you understand the risks!")
-    print("⚡ ALWAYS backup important data first!")
-    print(f"\n{Fore.RED}{'='*60}{Style.RESET_ALL}")
+    # Beautiful safety warning
+    ui_renderer = UIRenderer()
+    print(f"\n{Fore.RED}{Style.BRIGHT}{'═'*80}{Style.RESET_ALL}")
+    print(f"{Fore.RED}{Style.BRIGHT}{'⚠️  IMPORTANT SAFETY WARNING ⚠️'.center(80)}{Style.RESET_ALL}")
+    print(f"{Fore.RED}{Style.BRIGHT}{'═'*80}{Style.RESET_ALL}\n")
     
-    confirm = input(f"\n{Fore.CYAN}Type 'I UNDERSTAND THE RISKS' to continue: {Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}{Style.BRIGHT}Terminus {VERSION} is an ULTRA-POWERFUL tool that can:{Style.RESET_ALL}\n")
+    print(f"  {Fore.RED}•{Style.RESET_ALL} Remove {Fore.RED}{Style.BRIGHT}ANY{Style.RESET_ALL} software including system components")
+    print(f"  {Fore.RED}•{Style.RESET_ALL} Delete {Fore.RED}{Style.BRIGHT}ANY{Style.RESET_ALL} file regardless of permissions")
+    print(f"  {Fore.RED}•{Style.RESET_ALL} Modify critical system settings and registry")
+    print(f"  {Fore.RED}•{Style.RESET_ALL} Use multiple aggressive deletion methods")
+    print(f"  {Fore.RED}•{Style.RESET_ALL} Potentially damage your operating system\n")
+    
+    print(f"{Fore.MAGENTA}{Style.BRIGHT}⚡ This version has ENHANCED capabilities:{Style.RESET_ALL}")
+    print(f"  {Fore.MAGENTA}•{Style.RESET_ALL} 7-pass secure file deletion (DoD 5220.22-M)")
+    print(f"  {Fore.MAGENTA}•{Style.RESET_ALL} Ultra-aggressive permission bypassing")
+    print(f"  {Fore.MAGENTA}•{Style.RESET_ALL} Multiple deletion methods per file")
+    print(f"  {Fore.MAGENTA}•{Style.RESET_ALL} Comprehensive software detection")
+    print(f"  {Fore.MAGENTA}•{Style.RESET_ALL} Cross-platform support (Windows/Linux/macOS)\n")
+    
+    print(f"{Fore.RED}{Style.BRIGHT}⚡ Use ONLY if you understand the risks!{Style.RESET_ALL}")
+    print(f"{Fore.RED}{Style.BRIGHT}⚡ ALWAYS backup important data first!{Style.RESET_ALL}")
+    print(f"{Fore.RED}{Style.BRIGHT}⚡ Test in a virtual machine first!{Style.RESET_ALL}\n")
+    
+    print(f"{Fore.RED}{Style.BRIGHT}{'═'*80}{Style.RESET_ALL}\n")
+    
+    confirm = input(f"{Fore.CYAN}{Style.BRIGHT}Type 'I UNDERSTAND THE RISKS' to continue: {Style.RESET_ALL}")
     
     if confirm != "I UNDERSTAND THE RISKS":
         print(f"\n{Fore.YELLOW}Exiting for safety. Please read the warnings carefully.{Style.RESET_ALL}")
